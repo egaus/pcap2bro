@@ -42,5 +42,7 @@ RUN apt-get update -qq && \
     apt-get purge && \
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
-RUN echo '@load policy/tuning/json-logs.bro' >> /opt/bro/share/bro/site/local.bro
+COPY local.bro /opt/bro/share/site/local.bro
+
+#RUN echo '@load policy/tuning/json-logs.bro' >> /opt/bro/share/bro/site/local.bro
 
