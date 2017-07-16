@@ -18,16 +18,19 @@ def get_log_files(path):
 if __name__=='__main__':
     parser = argparse.ArgumentParser(description='Fixes dates on json format bro logs relative to some time period')
 
-    parser.add_argument('-d', '--logs_directory', help='Path where logs will be modified.')
-    parser.add_argument('-h', '--hours', help='Number hours from curent time to adjust logs to.')
+    parser.add_argument('-i', '--logs_input', help='Path where logs will be modified.', required=True)
+    parser.add_argument('-o', '--logs_output', help='Path where logs will be dropped.', required=True)
+    parser.add_argument('-hr', '--hours', help='Number hours from curent time to adjust logs to.', required=True)
+
     args = parser.parse_args()
 
-    # Use Case: Analyze samples on disk.
-    if args.logs_directory:
-        if not os.path.exists(args.input):
-            print "\nSupplied log_directory path did not exist.  Exiting.\n"
-            parser.print_help()
-            sys.exit(1)
+    if not os.path.exists(args.logs_input):
+        print "\nSupplied log_directory path did not exist.  Exiting.\n"
+        parser.print_help()
+        sys.exit(1)
+
+    if not os.path.exists(args.logs_output):
+        os.makedirs(args.logs_output)
 
     try:
         hours = int(args.hours)
@@ -36,8 +39,9 @@ if __name__=='__main__':
         parser.print_help()
         sys.exit(1)
 
-    path = args.logs_directory
-    files = get_log_files(path)
+    input_path = args.logs_input
+    output_path = args.logs_output
+    files = get_log_files(input_path)
     d = datetime.today() - timedelta(hours=hours)
     new_start_time = int(d.strftime('%s'))
 
@@ -49,7 +53,7 @@ if __name__=='__main__':
         orig_start_time = json.loads(logs[0]).get('ts', 0)
         os.remove(log_file)
         
-        with open(log_file, 'wb') as write_log:
+        with open(os.path.join(output_path, os.path.basename(log_file)), 'wb') as write_log:
             for log in logs:
                 log_dictionary = json.loads(log)
                 event_time = log_dictionary.get('ts', -1)
