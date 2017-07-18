@@ -1,4 +1,4 @@
-FROM      debian
+FROM      ubuntu:16.04
 MAINTAINER Evan Gaustad
 # Based on version from David Pisano
 
@@ -44,5 +44,5 @@ RUN apt-get update -qq && \
 
 COPY local.bro /opt/bro/share/site/local.bro
 
-#RUN echo '@load policy/tuning/json-logs.bro' >> /opt/bro/share/bro/site/local.bro
+RUN echo '@load policy/tuning/json-logs.bro' >> /opt/bro/share/bro/site/local.bro
 

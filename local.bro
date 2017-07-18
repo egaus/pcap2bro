@@ -101,3 +101,4 @@
 # is currently considered a preview and therefore not loaded by default.
 # @load policy/protocols/smb
 @load policy/tuning/json-logs.bro
+
